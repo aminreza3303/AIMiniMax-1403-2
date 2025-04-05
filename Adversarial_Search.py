@@ -45,13 +45,39 @@ class AI:
         return state[3]
 
     def max(self, board, player, opponent, depth):
-        """
-        choose the best state from succesor and return it and its value
-        """
-        NotImplemented
+        if depth == 0 or player.terminal_test(board):
+            return utility(board, player, opponent), [board, player, opponent, None]
+
+        max_value = self.MIN_VALUE
+        best_state = None
+
+        successors = self.succesor(board, player, opponent)
+        if not successors:
+            return utility(board, player, opponent), [board, player, opponent, None]
+
+        for next_board, next_player, next_opponent, action in successors:
+            value, _ = self.min(next_board, next_player, next_opponent, depth - 1)
+            if value > max_value:
+                max_value = value
+                best_state = [next_board, next_player, next_opponent, action]
+
+        return max_value, best_state
 
     def min(self, board, player, opponent, depth):
-        """
-        choose the worst state from succesor and return it and its value
-         """
-        NotImplemented
+        if depth == 0 or opponent.terminal_test(board):
+            return utility(board, player, opponent), [board, player, opponent, None]
+
+        min_value = self.MAX_VALUE
+        best_state = None
+
+        successors = self.succesor(board, player, opponent, reverse=True)
+        if not successors:
+            return utility(board, player, opponent), [board, player, opponent, None]
+
+        for next_board, next_player, next_opponent, action in successors:
+            value, _ = self.max(next_board, next_player, next_opponent, depth - 1)
+            if value < min_value:
+                min_value = value
+                best_state = [next_board, next_player, next_opponent, action]
+
+        return min_value, best_state

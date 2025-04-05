@@ -1,7 +1,6 @@
 from Board import Board
 from player import Player
 
-def utility(board: Board, player: Player, opponent: Player):
+def utility(board: Board, player: Player, opponent: Player) -> int:
 
-    """ Implement the evaluation function"""
-    NotImplemented
+    return board.count_pieces(player) - board.count_pieces(opponent)
